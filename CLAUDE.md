@@ -80,3 +80,9 @@ This project follows TDD principles with the classic Red-Green-Refactor cycle:
 - すべての会話は日本語で行う
 - コードコメントも日本語で記述する
 - 技術的な説明や議論も日本語で実施する
+
+## Git Workflow
+- **ベースブランチ**: `dev`ブランチを開発のメインブランチとして使用
+- **作業フロー**: 新機能や修正は必ず新しいブランチを作成
+- **プルリクエスト**: 作業完了後は`dev`ブランチに向けてPRを作成
+- **ブランチ命名**: `feature/機能名`、`fix/修正内容`、`docs/ドキュメント更新`等の形式を使用

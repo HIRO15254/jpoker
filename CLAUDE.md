@@ -45,9 +45,6 @@ This is a Next.js 15.3.4 project with TypeScript, bootstrapped with `create-next
 - `next.config.ts` - Next.js configuration (currently minimal)
 - `tsconfig.json` - TypeScript config with strict mode and path aliases
 - `package.json` - Project dependencies and scripts
-- `jest.config.js` - Jest testing framework configuration
-- `jest.setup.js` - Jest global setup and DOM matchers
-- `biome.json` - Biome linter and formatter configuration
 
 ## Development Philosophy
 
@@ -89,17 +86,11 @@ This project follows TDD principles with the classic Red-Green-Refactor cycle:
 - **Concurrent Rendering**: Leverage parallel data fetching where possible
 
 ## Testing Strategy
-- **TDD First**: Write tests before implementation (Red-Green-Refactor cycle)
-- **Jest + React Testing Library**: 単体テストとコンポーネントテスト
-- **Coverage Target**: 80%以上のテストカバレッジを維持
-- **Test Organization**: `__tests__`ディレクトリまたは`.test.tsx`ファイル
-- **CI Integration**: GitHub ActionsでPR時とpush時に自動テスト実行
-
-### テストの書き方
-- **Arrange-Act-Assert**: テストの構造を明確に分離
-- **User-Centric**: ユーザーの視点でテストを記述
-- **Behavior Testing**: 実装詳細ではなく振る舞いをテスト
-- **Japanese Test Names**: テスト名は日本語で記述（仕様の明確化）
+- Write tests before implementation (TDD)
+- Focus on behavior testing over implementation details
+- Use tests as living documentation
+- Maintain high test coverage for confidence in refactoring
+- Integrate testing into CI/CD pipeline
 
 ## Communication Guidelines
 - すべての会話は日本語で行う

@@ -6,17 +6,26 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "biome:check": "biome check .",
+    "biome:fix": "biome check --write .",
+    "biome:format": "biome format --write .",
+    "biome:lint": "biome lint ."
   },
   "dependencies": {
+    "@mantine/core": "^8.1.2",
+    "@mantine/form": "^8.1.2",
+    "@mantine/hooks": "^8.1.2",
+    "@mantine/notifications": "^8.1.2",
+    "next": "15.3.4",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "next": "15.3.4"
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@biomejs/biome": "^2.0.6",
     "@types/node": "^20",
     "@types/react": "^19",
-    "@types/react-dom": "^19"
+    "@types/react-dom": "^19",
+    "typescript": "^5"
   }
 }

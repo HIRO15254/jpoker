@@ -6,10 +6,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 This is a Next.js 15.3.4 project with TypeScript, bootstrapped with `create-next-app`. It's a poker application (jpoker) using React 19 and the Next.js App Router architecture.
 
 ## Development Commands
-- `npm run dev` - Start development server with Turbopack (opens at http://localhost:3000)
-- `npm run build` - Build the application for production
-- `npm start` - Start the production server
-- `npm run lint` - Run ESLint for code quality checks
+- `bun dev` - Start development server with Turbopack (opens at http://localhost:3000)
+- `bun build` - Build the application for production
+- `bun start` - Start the production server
+- `bun lint` - Run ESLint for code quality checks
+- `bun biome:check` - Run Biome for linting and formatting checks
+- `bun biome:fix` - Fix linting and formatting issues with Biome
+- `bun biome:format` - Format code with Biome
+- `bun biome:lint` - Run Biome linter only
+
+## Package Manager
+- **Bun**: このプロジェクトではパッケージマネージャーとしてBunを使用します
+- 依存関係の追加: `bun add <package-name>`
+- 開発依存関係の追加: `bun add -d <package-name>`
+- パッケージの削除: `bun remove <package-name>`
 
 ## Architecture & Structure
 - **App Router**: Uses Next.js App Router pattern in `src/app/`
@@ -80,3 +90,9 @@ This project follows TDD principles with the classic Red-Green-Refactor cycle:
 - すべての会話は日本語で行う
 - コードコメントも日本語で記述する
 - 技術的な説明や議論も日本語で実施する
+
+## Git Workflow
+- **ベースブランチ**: `dev`ブランチを開発のメインブランチとして使用
+- **作業フロー**: 新機能や修正は必ず新しいブランチを作成
+- **プルリクエスト**: 作業完了後は`dev`ブランチに向けてPRを作成
+- **ブランチ命名**: `feature/機能名`、`fix/修正内容`、`docs/ドキュメント更新`等の形式を使用

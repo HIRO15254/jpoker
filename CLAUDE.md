@@ -6,10 +6,26 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 This is a Next.js 15.3.4 project with TypeScript, bootstrapped with `create-next-app`. It's a poker application (jpoker) using React 19 and the Next.js App Router architecture.
 
 ## Development Commands
-- `npm run dev` - Start development server with Turbopack (opens at http://localhost:3000)
-- `npm run build` - Build the application for production
-- `npm start` - Start the production server
-- `npm run lint` - Run ESLint for code quality checks
+- `bun dev` - Start development server with Turbopack (opens at http://localhost:3000)
+- `bun build` - Build the application for production
+- `bun start` - Start the production server
+- `bun lint` - Run ESLint for code quality checks
+- `bun biome:check` - Run Biome for linting and formatting checks
+- `bun biome:fix` - Fix linting and formatting issues with Biome
+- `bun biome:format` - Format code with Biome
+- `bun biome:lint` - Run Biome linter only
+
+## Testing Commands
+- `bun test` - Run tests with Jest
+- `bun test:watch` - Run tests in watch mode
+- `bun test:coverage` - Run tests with coverage report
+- `bun test:ci` - Run tests in CI mode (no watch, with coverage)
+
+## Package Manager
+- **Bun**: このプロジェクトではパッケージマネージャーとしてBunを使用します
+- 依存関係の追加: `bun add <package-name>`
+- 開発依存関係の追加: `bun add -d <package-name>`
+- パッケージの削除: `bun remove <package-name>`
 
 ## Architecture & Structure
 - **App Router**: Uses Next.js App Router pattern in `src/app/`
@@ -29,6 +45,9 @@ This is a Next.js 15.3.4 project with TypeScript, bootstrapped with `create-next
 - `next.config.ts` - Next.js configuration (currently minimal)
 - `tsconfig.json` - TypeScript config with strict mode and path aliases
 - `package.json` - Project dependencies and scripts
+- `jest.config.js` - Jest testing framework configuration
+- `jest.setup.js` - Jest global setup and DOM matchers
+- `biome.json` - Biome linter and formatter configuration
 
 ## Development Philosophy
 
@@ -70,11 +89,17 @@ This project follows TDD principles with the classic Red-Green-Refactor cycle:
 - **Concurrent Rendering**: Leverage parallel data fetching where possible
 
 ## Testing Strategy
-- Write tests before implementation (TDD)
-- Focus on behavior testing over implementation details
-- Use tests as living documentation
-- Maintain high test coverage for confidence in refactoring
-- Integrate testing into CI/CD pipeline
+- **TDD First**: Write tests before implementation (Red-Green-Refactor cycle)
+- **Jest + React Testing Library**: 単体テストとコンポーネントテスト
+- **Coverage Target**: 80%以上のテストカバレッジを維持
+- **Test Organization**: `__tests__`ディレクトリまたは`.test.tsx`ファイル
+- **CI Integration**: GitHub ActionsでPR時とpush時に自動テスト実行
+
+### テストの書き方
+- **Arrange-Act-Assert**: テストの構造を明確に分離
+- **User-Centric**: ユーザーの視点でテストを記述
+- **Behavior Testing**: 実装詳細ではなく振る舞いをテスト
+- **Japanese Test Names**: テスト名は日本語で記述（仕様の明確化）
 
 ## Communication Guidelines
 - すべての会話は日本語で行う

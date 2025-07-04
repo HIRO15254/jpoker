@@ -16,10 +16,10 @@ This is a Next.js 15.3.4 project with TypeScript, bootstrapped with `create-next
 - `bun biome:lint` - Run Biome linter only
 
 ## Testing Commands
-- `bun test` - Run tests with Jest
+- `bun test` - Run tests with Bun's built-in test runner
 - `bun test:watch` - Run tests in watch mode
 - `bun test:coverage` - Run tests with coverage report
-- `bun test:ci` - Run tests in CI mode (no watch, with coverage)
+- `bun test:ci` - Run tests in CI mode (with coverage)
 
 ## Package Manager
 - **Bun**: このプロジェクトではパッケージマネージャーとしてBunを使用します

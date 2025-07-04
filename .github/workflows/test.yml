@@ -4,7 +4,6 @@ on:
   push:
     branches: [ dev, master ]
   pull_request:
-    branches: [ dev, master ]
 
 jobs:
   test:
@@ -24,10 +23,3 @@ jobs:
 
       - name: Run tests
         run: bun test:ci
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        if: always()
-        with:
-          file: ./coverage/lcov.info
-          fail_ci_if_error: false

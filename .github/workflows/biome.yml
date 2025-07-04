@@ -2,6 +2,7 @@ name: Biome Check
 
 on:
   push:
+    branches: [ dev, master ]
   pull_request:
 
 jobs:

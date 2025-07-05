@@ -1,7 +1,14 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "WebFetch(domain:supabase.com)",
+      "Bash(DATABASE_URL=\"postgresql://postgres:postgres@127.0.0.1:54322/postgres\" bun test src/lib/db/__tests__/crud-mock.test.ts)",
+      "Bash(DATABASE_URL=\"postgresql://postgres:postgres@127.0.0.1:54322/postgres\" bun test src/lib/db/__tests__/crud.test.ts)",
+      "Bash(DATABASE_URL=\"postgresql://postgres:postgres@127.0.0.1:54322/postgres\" bun test src/lib/db/__tests__/integration/database.test.ts)",
+      "Bash(DATABASE_URL=\"postgresql://postgres:postgres@127.0.0.1:54322/postgres\" bun test src/lib/db/__tests__/schema.test.ts)",
+      "Bash(DATABASE_URL=\"postgresql://postgres:postgres@127.0.0.1:54322/postgres\" bun test src/lib/db/__tests__/crud-simple.test.ts)",
+      "Bash(DATABASE_URL=\"postgresql://postgres:postgres@127.0.0.1:54322/postgres\" bun test \"src/**/*.test.{ts,tsx}\")"
     ],
     "deny": []
   }

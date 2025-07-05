@@ -21,6 +21,13 @@ This is a Next.js 15.3.4 project with TypeScript, bootstrapped with `create-next
 - `bun test:coverage` - Run tests with coverage report
 - `bun test:ci` - Run tests in CI mode (with coverage)
 
+## Database Commands
+- `bun db:generate` - Generate migration files from schema changes
+- `bun db:migrate` - Apply pending migrations to database
+- `bun db:push` - Push schema changes directly to database (development only)
+- `bun db:studio` - Open Drizzle Studio for database management
+- `bun db:seed` - Run database seeding script
+
 ## Package Manager
 - **Bun**: このプロジェクトではパッケージマネージャーとしてBunを使用します
 - 依存関係の追加: `bun add <package-name>`
@@ -30,6 +37,7 @@ This is a Next.js 15.3.4 project with TypeScript, bootstrapped with `create-next
 ## Architecture & Structure
 - **App Router**: Uses Next.js App Router pattern in `src/app/`
 - **TypeScript**: Strict TypeScript configuration with path aliases (`@/*` maps to `./src/*`)
+- **Database**: Supabase (PostgreSQL) with Drizzle ORM for type-safe database operations
 - **Styling**: Global CSS with CSS custom properties for light/dark theme support
 - **Font**: Uses Geist Sans and Geist Mono fonts from Google Fonts
 - **Layout**: Root layout defines the HTML structure and font variables
@@ -39,12 +47,48 @@ This is a Next.js 15.3.4 project with TypeScript, bootstrapped with `create-next
 - `src/app/layout.tsx` - Root layout component with metadata and font setup
 - `src/app/page.tsx` - Homepage component
 - `src/app/globals.css` - Global styles with theme variables
+- `src/lib/db/` - Database layer with Drizzle ORM
+- `src/lib/db/schema/` - Database schema definitions
+- `src/lib/db/repositories/` - Repository pattern for data access
+- `src/lib/supabase/` - Supabase client configuration
 - `public/` - Static assets (SVG icons)
 
 ## Configuration Files
 - `next.config.ts` - Next.js configuration (currently minimal)
 - `tsconfig.json` - TypeScript config with strict mode and path aliases
 - `package.json` - Project dependencies and scripts
+- `drizzle.config.ts` - Drizzle ORM configuration for migrations and schema management
+- `.env.example` - Environment variables template (copy to `.env.local`)
+
+## Database Setup
+
+### Environment Variables
+Create a `.env.local` file with the following variables:
+```
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+DATABASE_URL=postgresql://username:password@hostname:5432/database_name
+```
+
+### Database Schema
+The project uses the following main entities:
+- **Users**: User accounts with authentication
+- **Games**: Poker game sessions with status and player management
+- **Players**: Players participating in specific games
+- **Hands**: Individual poker hands within games
+
+### Repository Pattern
+Data access is organized using the Repository pattern:
+- `UserRepository`: User management and authentication
+- `GameRepository`: Game creation, status management, player joining/leaving
+- `PlayerRepository`: Player state management, chip tracking
+- All repositories extend `AbstractRepository` for consistent CRUD operations
+
+### Database Migrations
+1. Make schema changes in `src/lib/db/schema/`
+2. Generate migrations: `bun db:generate`
+3. Apply migrations: `bun db:migrate`
+4. For development, you can also use: `bun db:push`
 
 ## Development Philosophy
 
@@ -91,6 +135,13 @@ This project follows TDD principles with the classic Red-Green-Refactor cycle:
 - Use tests as living documentation
 - Maintain high test coverage for confidence in refactoring
 - Integrate testing into CI/CD pipeline
+
+## Database Setup
+- **Supabase**: ローカル開発環境とクラウドデータベース
+- **Drizzle ORM**: 型安全なデータベース操作
+- **ローカル環境**: `bunx supabase start` でローカルSupabase起動
+- **テスト環境**: モック接続でCI/CDテストを実行
+- **リポジトリパターン**: データアクセス層の抽象化でテストしやすい設計
 
 ## Communication Guidelines
 - すべての会話は日本語で行う

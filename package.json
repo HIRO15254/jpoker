@@ -8,20 +8,34 @@
     "start": "next start",
     "lint": "next lint",
     "test": "bun test",
+    "test:all": "DATABASE_URL=\"postgresql://postgres:postgres@127.0.0.1:54322/postgres\" bun test src/app/__tests__/page.test.tsx src/lib/db/__tests__/connection.test.ts src/lib/db/__tests__/schema.test.ts src/lib/db/__tests__/crud-simple.test.ts src/lib/db/__tests__/crud-mock.test.ts src/lib/db/__tests__/crud.test.ts src/lib/db/__tests__/repositories.test.ts src/lib/db/__tests__/integration/database.test.ts",
     "test:watch": "bun test --watch",
     "test:coverage": "bun test --coverage",
     "test:ci": "bun test --coverage",
     "biome:check": "biome check .",
     "biome:fix": "biome check --write .",
     "biome:format": "biome format --write .",
-    "biome:lint": "biome lint ."
+    "biome:lint": "biome lint .",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio",
+    "db:seed": "bun run src/lib/db/seed.ts",
+    "supabase:start": "supabase start",
+    "supabase:stop": "supabase stop",
+    "supabase:status": "supabase status",
+    "supabase:reset": "supabase db reset",
+    "test:db": "NODE_ENV=test bun test src/lib/db/__tests__/integration/"
   },
   "dependencies": {
     "@mantine/core": "^8.1.2",
     "@mantine/form": "^8.1.2",
     "@mantine/hooks": "^8.1.2",
     "@mantine/notifications": "^8.1.2",
+    "@supabase/supabase-js": "^2.50.3",
+    "drizzle-orm": "^0.44.2",
     "next": "15.3.4",
+    "postgres": "^3.4.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
@@ -38,7 +52,9 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/web": "^0.0.245",
+    "drizzle-kit": "^0.31.4",
     "jsdom": "^26.1.0",
+    "supabase": "^2.30.4",
     "typescript": "^5"
   }
 }

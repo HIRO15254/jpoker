@@ -47,7 +47,7 @@ describe.skipIf(isCI)('Database Connection', () => {
     const invalidDb = drizzle(invalidSql);
 
     try {
-      await invalidDb.execute(sql`SELECT 1`);
+      await invalidDb.execute("SELECT 1");
       expect(true).toBe(false); // この行に到達すべきでない
     } catch (error) {
       expect(error).toBeDefined();

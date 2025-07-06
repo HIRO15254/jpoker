@@ -1,7 +1,7 @@
 import { afterAll, describe, expect, it } from 'bun:test';
 import { sql as drizzleSql } from 'drizzle-orm';
 import { users } from '../schema';
-import { closeConnection, db, sql, testConnection } from './utils/connection';
+import { closeConnection, db, testConnection } from './utils/connection';
 
 const isCI = process.env.CI === 'true';
 
@@ -47,7 +47,7 @@ describe.skipIf(isCI)('Database Connection', () => {
     const invalidDb = drizzle(invalidSql);
 
     try {
-      await invalidDb.execute("SELECT 1");
+      await invalidDb.execute('SELECT 1');
       expect(true).toBe(false); // この行に到達すべきでない
     } catch (error) {
       expect(error).toBeDefined();

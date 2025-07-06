@@ -8,22 +8,34 @@
     "start": "next start",
     "lint": "next lint",
     "test": "bun test",
-    "test:watch": "bun test --watch",
+    "test:watcclauh": "bun test --watch",
     "test:coverage": "bun test --coverage",
-    "test:ci": "bun test --coverage",
+    "test:ci": "bun test --coverage --env-file .env.ci",
     "biome:check": "biome check .",
     "biome:fix": "biome check --write .",
     "biome:format": "biome format --write .",
-    "biome:lint": "biome lint ."
+    "biome:lint": "biome lint .",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio",
+    "db:seed": "bun run src/lib/db/seed.ts",
+    "supabase:start": "supabase start",
+    "supabase:stop": "supabase stop",
+    "supabase:status": "supabase status",
+    "supabase:reset": "supabase db reset"
   },
   "dependencies": {
     "@mantine/core": "^8.1.2",
     "@mantine/form": "^8.1.2",
     "@mantine/hooks": "^8.1.2",
     "@mantine/notifications": "^8.1.2",
+    "@supabase/supabase-js": "^2.50.3",
+    "drizzle-orm": "^0.44.2",
     "next": "15.3.4",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "postgres": "^3.4.7",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.0.6",
@@ -34,11 +46,13 @@
     "@testing-library/user-event": "^14.6.1",
     "@types/bun": "^1.2.18",
     "@types/jsdom": "^21.1.7",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
+    "@types/node": "^20.19.4",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
     "@types/web": "^0.0.245",
+    "drizzle-kit": "^0.31.4",
     "jsdom": "^26.1.0",
-    "typescript": "^5"
+    "supabase": "^2.30.4",
+    "typescript": "^5.8.3"
   }
 }

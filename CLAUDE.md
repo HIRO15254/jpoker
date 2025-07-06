@@ -1,155 +1,125 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+## プロジェクト概要
+Next.js 15.3.4とTypeScriptを使用したポーカーアプリケーション (jpoker)。React 19とNext.js App Router、Mantineコンポーネントライブラリを採用。
 
-## Project Overview
-This is a Next.js 15.3.4 project with TypeScript, bootstrapped with `create-next-app`. It's a poker application (jpoker) using React 19 and the Next.js App Router architecture.
+## 開発コマンド
+**基本開発**
+- `bun dev` - 開発サーバー起動 (Turbopack使用、http://localhost:3000)
+- `bun build` - 本番用ビルド
+- `bun start` - 本番サーバー起動
 
-## Development Commands
-- `bun dev` - Start development server with Turbopack (opens at http://localhost:3000)
-- `bun build` - Build the application for production
-- `bun start` - Start the production server
-- `bun lint` - Run ESLint for code quality checks
-- `bun biome:check` - Run Biome for linting and formatting checks
-- `bun biome:fix` - Fix linting and formatting issues with Biome
-- `bun biome:format` - Format code with Biome
-- `bun biome:lint` - Run Biome linter only
+**品質チェック（統合）**
+- `bun biome:check` - Biomeによるlintとformat全チェック
+- `bun biome:fix` - Biomeによる自動修正
 
-## Testing Commands
-- `bun test` - Run tests with Bun's built-in test runner
-- `bun test:watch` - Run tests in watch mode
-- `bun test:coverage` - Run tests with coverage report
-- `bun test:ci` - Run tests in CI mode (with coverage)
+**テスト**
+- `bun test` - Bunテストランナーでテスト実行
+- `bun test:watch` - テストのwatch mode
+- `bun test:coverage` - カバレッジレポート付きテスト
 
-## Database Commands
-- `bun db:generate` - Generate migration files from schema changes
-- `bun db:migrate` - Apply pending migrations to database
-- `bun db:push` - Push schema changes directly to database (development only)
-- `bun db:studio` - Open Drizzle Studio for database management
-- `bun db:seed` - Run database seeding script
+**パッケージ管理**
+- `bun add <package-name>` - 依存関係追加
+- `bun add -d <package-name>` - 開発依存関係追加
+- `bun remove <package-name>` - パッケージ削除
 
-## Package Manager
-- **Bun**: このプロジェクトではパッケージマネージャーとしてBunを使用します
-- 依存関係の追加: `bun add <package-name>`
-- 開発依存関係の追加: `bun add -d <package-name>`
-- パッケージの削除: `bun remove <package-name>`
+## 開発ワークフロー
+### TDD サイクル
+1. **RED**: 失敗するテストを書く
+   - 期待する動作を定義
+   - エッジケースを明確化
+   - 意図的に失敗するテストを作成
 
-## Architecture & Structure
-- **App Router**: Uses Next.js App Router pattern in `src/app/`
-- **TypeScript**: Strict TypeScript configuration with path aliases (`@/*` maps to `./src/*`)
-- **Database**: Supabase (PostgreSQL) with Drizzle ORM for type-safe database operations
-- **Styling**: Global CSS with CSS custom properties for light/dark theme support
-- **Font**: Uses Geist Sans and Geist Mono fonts from Google Fonts
-- **Layout**: Root layout defines the HTML structure and font variables
+2. **GREEN**: テストを通す最小限のコード
+   - 機能性を優先し、エレガンスは後回し
+   - 最短経路でテストをパスさせる
 
-## Key Directories
-- `src/app/` - Main application code using App Router
-- `src/app/layout.tsx` - Root layout component with metadata and font setup
-- `src/app/page.tsx` - Homepage component
-- `src/app/globals.css` - Global styles with theme variables
-- `src/lib/db/` - Database layer with Drizzle ORM
-- `src/lib/db/schema/` - Database schema definitions
-- `src/lib/db/repositories/` - Repository pattern for data access
-- `src/lib/supabase/` - Supabase client configuration
-- `public/` - Static assets (SVG icons)
+3. **REFACTOR**: テストの安全網のもとでコード改善
+   - 品質向上とリファクタリング
+   - テストカバレッジを維持
 
-## Configuration Files
-- `next.config.ts` - Next.js configuration (currently minimal)
-- `tsconfig.json` - TypeScript config with strict mode and path aliases
-- `package.json` - Project dependencies and scripts
-- `drizzle.config.ts` - Drizzle ORM configuration for migrations and schema management
-- `.env.example` - Environment variables template (copy to `.env.local`)
+### 日常開発フロー
+1. 新しいブランチを作成
+2. **テストファースト**: 機能のテストを先に書く
+3. **実装**: テストを通すコードを書く
+4. **品質チェック**: `bun biome:check`を実行
+5. **テスト実行**: `bun test`でテストを確認
+6. **リファクタリング**: 必要に応じてコードを改善
+7. プルリクエスト作成
 
-## Database Setup
+## 技術スタック
+**フロントエンド**
+- **Next.js 15.3.4**: App Router、Server Components
+- **React 19**: Concurrent Rendering、Suspense
+- **TypeScript**: 厳格設定、パスエイリアス (`@/*` → `./src/*`)
+- **Mantine**: UIコンポーネントライブラリ
+  - Core、Form、Hooks、Notifications
 
-### Environment Variables
-Create a `.env.local` file with the following variables:
+**データベース・ORM**
+- **Supabase**: PostgreSQLベースのBaaS
+- **Drizzle ORM**: TypeScript-first ORM
+
+**開発ツール**
+- **Bun**: パッケージマネージャー、テストランナー
+- **Biome**: Linter、Formatter（統合品質チェック）
+- **Testing Library**: React Testing Library、Jest DOM
+
+## プロジェクト構造
 ```
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-DATABASE_URL=postgresql://username:password@hostname:5432/database_name
+src/
+├── app/                    # Next.js App Router
+│   ├── layout.tsx         # ルートレイアウト
+│   ├── page.tsx           # ホームページ
+│   ├── _components/       # 共通コンポーネント
+│   └── __tests__/         # テストファイル
+test/                      # テスト設定
+public/                    # 静的ファイル
 ```
 
-### Database Schema
-The project uses the following main entities:
-- **Users**: User accounts with authentication
-- **Games**: Poker game sessions with status and player management
-- **Players**: Players participating in specific games
-- **Hands**: Individual poker hands within games
+## アーキテクチャ原則
+**コンポーネント設計**
+- **Server Components優先**: SSRとデータフェッチを重視
+- **Composition Pattern**: 再利用可能なコンポーネント構成
+- **Container/Presentational**: データロジックと表示の分離
 
-### Repository Pattern
-Data access is organized using the Repository pattern:
-- `UserRepository`: User management and authentication
-- `GameRepository`: Game creation, status management, player joining/leaving
-- `PlayerRepository`: Player state management, chip tracking
-- All repositories extend `AbstractRepository` for consistent CRUD operations
+**パフォーマンス**
+- **多層キャッシュ**: Full Route Cache、Data Cache、Router Cache
+- **Suspense Streaming**: 段階的ローディング
+- **N+1クエリ防止**: 効率的なデータフェッチパターン
 
-### Database Migrations
-1. Make schema changes in `src/lib/db/schema/`
-2. Generate migrations: `bun db:generate`
-3. Apply migrations: `bun db:migrate`
-4. For development, you can also use: `bun db:push`
+## コミュニケーション・Git運用
+**コミュニケーション**
+- すべての会話、コードコメント、技術議論は日本語で実施
 
-## Development Philosophy
+**Git Workflow**
+- **ベースブランチ**: `dev`
+- **ブランチ命名**: `feature/機能名`、`fix/修正内容`、`docs/ドキュメント更新`
+- **プルリクエスト**: `dev`ブランチ向けに作成
 
-### TDD (Test-Driven Development)
-This project follows TDD principles with the classic Red-Green-Refactor cycle:
+## 品質保証
+**自動チェック**
+- コミット前に必ず`bun biome:check`と`bun test`を実行
+- CI/CDパイプラインでテストとビルドを自動化
+- 高いテストカバレッジを維持
 
-1. **RED**: Write a failing test first
-   - Define expected behavior before implementation
-   - Clarify requirements and edge cases
-   - Intentionally create tests that fail
+**テスト戦略**
+- 実装詳細ではなく動作をテスト
+- テストを生きたドキュメントとして活用
+- リファクタリング時の信頼性を確保
 
-2. **GREEN**: Implement minimal code to pass the test
-   - Focus on making tests pass quickly
-   - Prioritize functionality over code elegance
-   - Take the shortest path to working solution
+## 公式ドキュメント参照
+**必須参照ドキュメント**
+- **Next.js**: [公式ドキュメント](https://nextjs.org/docs) - App Router、サーバーコンポーネント
+- **React**: [公式ドキュメント](https://ja.react.dev/) - Hooks、状態管理
+- **TypeScript**: [公式ドキュメント](https://www.typescriptlang.org/docs/) - 型システム、設定
+- **Mantine**: [公式ドキュメント](https://mantine.dev/) - コンポーネント、フォーム
+- **Supabase**: [公式ドキュメント](https://supabase.com/docs) - データベース、認証、API
+- **Drizzle ORM**: [公式ドキュメント](https://orm.drizzle.team/docs/overview) - スキーマ定義、クエリ
+- **Bun**: [公式ドキュメント](https://bun.sh/docs) - パッケージ管理、テストランナー
+- **Biome**: [公式ドキュメント](https://biomejs.dev/ja/) - Linter、Formatter設定
 
-3. **REFACTOR**: Improve and optimize code with confidence
-   - Enhance code quality while tests provide safety net
-   - Continuous improvement of codebase
-   - Maintain test coverage during refactoring
-
-### Next.js Architecture Principles
-
-#### Component Design
-- **Server Components First**: Prioritize server-side rendering and data fetching
-- **Composition Pattern**: Build complex UIs from simple, reusable components  
-- **Container/Presentational**: Separate data logic from presentation logic
-- **Colocated Data Fetching**: Fetch data close to where it's used
-
-#### Performance & Caching
-- **Multiple Cache Layers**: Utilize Full Route Cache, Data Cache, and Router Cache
-- **Request Memoization**: Avoid duplicate requests in component tree
-- **Suspense Streaming**: Enable progressive loading with React Suspense
-- **N+1 Query Prevention**: Design efficient data fetching patterns
-
-#### Server vs Client Components
-- **Server Components**: Default choice for data fetching and static content
-- **Client Components**: Use for interactivity, browser APIs, and state management
-- **Concurrent Rendering**: Leverage parallel data fetching where possible
-
-## Testing Strategy
-- Write tests before implementation (TDD)
-- Focus on behavior testing over implementation details
-- Use tests as living documentation
-- Maintain high test coverage for confidence in refactoring
-- Integrate testing into CI/CD pipeline
-
-## Database Setup
-- **Supabase**: ローカル開発環境とクラウドデータベース
-- **Drizzle ORM**: 型安全なデータベース操作
-- **ローカル環境**: `bunx supabase start` でローカルSupabase起動
-- **テスト環境**: モック接続でCI/CDテストを実行
-- **リポジトリパターン**: データアクセス層の抽象化でテストしやすい設計
-
-## Communication Guidelines
-- すべての会話は日本語で行う
-- コードコメントも日本語で記述する
-- 技術的な説明や議論も日本語で実施する
-
-## Git Workflow
-- **ベースブランチ**: `dev`ブランチを開発のメインブランチとして使用
-- **作業フロー**: 新機能や修正は必ず新しいブランチを作成
-- **プルリクエスト**: 作業完了後は`dev`ブランチに向けてPRを作成
-- **ブランチ命名**: `feature/機能名`、`fix/修正内容`、`docs/ドキュメント更新`等の形式を使用
+**参照ガイドライン**
+- 新機能実装前に必ず関連する公式ドキュメントを確認
+- 最新のベストプラクティスを公式ドキュメントから取得
+- 問題解決時はstack overflowより公式ドキュメントを優先
+- バージョン更新時は必ず変更ログと移行ガイドを確認

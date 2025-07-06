@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'bun:test';
-import { users, type User, type NewUser } from '../schema/users';
+import { describe, expect, it } from 'bun:test';
+import { type NewUser, type User, users } from '../schema/users';
 
 describe('users schema', () => {
   it('should have correct table structure', () => {
@@ -48,14 +48,14 @@ describe('users schema', () => {
       displayName: 'Test User',
       avatarUrl: 'https://example.com/avatar.jpg',
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
 
     const newUser: NewUser = {
       email: 'new@example.com',
       username: 'newuser',
       displayName: 'New User',
-      avatarUrl: null
+      avatarUrl: null,
     };
 
     expect(user.id).toBeDefined();
@@ -66,7 +66,7 @@ describe('users schema', () => {
   it('should support optional fields in NewUser type', () => {
     const minimalUser: NewUser = {
       email: 'minimal@example.com',
-      username: 'minimal'
+      username: 'minimal',
     };
 
     expect(minimalUser.email).toBe('minimal@example.com');

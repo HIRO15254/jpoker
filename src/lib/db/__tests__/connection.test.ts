@@ -1,7 +1,7 @@
-import { describe, it, expect, beforeAll, afterAll } from 'bun:test';
-import { testConnection, closeConnection, db, sql } from './utils/connection';
-import { users } from '../schema';
+import { afterAll, describe, expect, it } from 'bun:test';
 import { sql as drizzleSql } from 'drizzle-orm';
+import { users } from '../schema';
+import { closeConnection, db, sql, testConnection } from './utils/connection';
 
 const isCI = process.env.CI === 'true';
 
@@ -41,7 +41,9 @@ describe.skipIf(isCI)('Database Connection', () => {
     const { drizzle } = await import('drizzle-orm/postgres-js');
     const postgres = await import('postgres');
 
-    const invalidSql = postgres.default('postgresql://invalid:invalid@localhost:9999/invalid');
+    const invalidSql = postgres.default(
+      'postgresql://invalid:invalid@localhost:9999/invalid',
+    );
     const invalidDb = drizzle(invalidSql);
 
     try {
@@ -55,13 +57,15 @@ describe.skipIf(isCI)('Database Connection', () => {
   });
 
   it('should check if users table exists using drizzle', async () => {
-    const result = await db.execute(drizzleSql.raw(`
+    const result = await db.execute(
+      drizzleSql.raw(`
       SELECT EXISTS (
         SELECT FROM information_schema.tables 
         WHERE table_schema = 'public' 
         AND table_name = 'users'
       );
-    `));
+    `),
+    );
     expect(result[0].exists).toBe(true);
   });
 

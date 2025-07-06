@@ -2,7 +2,9 @@ import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import * as schema from '../../schema';
 
-const connectionString = process.env.DATABASE_URL || 'postgresql://postgres:postgres@127.0.0.1:54322/postgres';
+const connectionString =
+  process.env.DATABASE_URL ||
+  'postgresql://postgres:postgres@127.0.0.1:54322/postgres';
 
 export const sql = postgres(connectionString);
 export const db = drizzle(sql, { schema });
@@ -15,7 +17,7 @@ export async function testConnection() {
     return {
       success: false,
       message: 'データベース接続失敗',
-      error: error instanceof Error ? error.message : 'Unknown error'
+      error: error instanceof Error ? error.message : 'Unknown error',
     };
   }
 }

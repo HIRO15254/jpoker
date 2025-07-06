@@ -1,8 +1,15 @@
-import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'bun:test';
+import {
+  afterAll,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+} from 'bun:test';
+import { eq, like } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
-import { users, type NewUser } from '../schema';
-import { eq, like } from 'drizzle-orm';
+import { type NewUser, users } from '../schema';
 
 const isCI = process.env.CI === 'true';
 
@@ -13,7 +20,9 @@ describe.skipIf(isCI)('Users CRUD Operations', () => {
 
   beforeAll(async () => {
     // テスト専用の接続を作成
-    const connectionString = process.env.DATABASE_URL || 'postgresql://postgres:postgres@127.0.0.1:54322/postgres';
+    const connectionString =
+      process.env.DATABASE_URL ||
+      'postgresql://postgres:postgres@127.0.0.1:54322/postgres';
     sql = postgres(connectionString);
     db = drizzle(sql, { schema: { users } });
 
@@ -38,7 +47,7 @@ describe.skipIf(isCI)('Users CRUD Operations', () => {
         email: 'test@example.com',
         username: 'testuser',
         displayName: 'Test User',
-        avatarUrl: 'https://example.com/avatar.jpg'
+        avatarUrl: 'https://example.com/avatar.jpg',
       };
 
       const result = await db.insert(users).values(newUser).returning();
@@ -58,7 +67,7 @@ describe.skipIf(isCI)('Users CRUD Operations', () => {
     it('should create a user with minimal fields', async () => {
       const newUser: NewUser = {
         email: 'test-minimal@example.com',
-        username: 'testminimal'
+        username: 'testminimal',
       };
 
       const result = await db.insert(users).values(newUser).returning();
@@ -73,14 +82,14 @@ describe.skipIf(isCI)('Users CRUD Operations', () => {
     it('should fail to create user with duplicate email', async () => {
       const newUser: NewUser = {
         email: 'test-duplicate@example.com',
-        username: 'testdup1'
+        username: 'testdup1',
       };
 
       await db.insert(users).values(newUser);
 
       const duplicateUser: NewUser = {
         email: 'test-duplicate@example.com',
-        username: 'testdup2'
+        username: 'testdup2',
       };
 
       try {
@@ -94,14 +103,14 @@ describe.skipIf(isCI)('Users CRUD Operations', () => {
     it('should fail to create user with duplicate username', async () => {
       const newUser: NewUser = {
         email: 'test-dup-username1@example.com',
-        username: 'testdupusername'
+        username: 'testdupusername',
       };
 
       await db.insert(users).values(newUser);
 
       const duplicateUser: NewUser = {
         email: 'test-dup-username2@example.com',
-        username: 'testdupusername'
+        username: 'testdupusername',
       };
 
       try {
@@ -118,14 +127,17 @@ describe.skipIf(isCI)('Users CRUD Operations', () => {
       const newUser: NewUser = {
         email: 'test-read@example.com',
         username: 'testread',
-        displayName: 'Test Read User'
+        displayName: 'Test Read User',
       };
       const result = await db.insert(users).values(newUser).returning();
       testUserId = result[0].id;
     });
 
     it('should find user by id', async () => {
-      const result = await db.select().from(users).where(eq(users.id, testUserId));
+      const result = await db
+        .select()
+        .from(users)
+        .where(eq(users.id, testUserId));
 
       expect(result).toHaveLength(1);
       expect(result[0].id).toBe(testUserId);
@@ -134,7 +146,10 @@ describe.skipIf(isCI)('Users CRUD Operations', () => {
     });
 
     it('should find user by email', async () => {
-      const result = await db.select().from(users).where(eq(users.email, 'test-read@example.com'));
+      const result = await db
+        .select()
+        .from(users)
+        .where(eq(users.email, 'test-read@example.com'));
 
       expect(result).toHaveLength(1);
       expect(result[0].id).toBe(testUserId);
@@ -142,7 +157,10 @@ describe.skipIf(isCI)('Users CRUD Operations', () => {
     });
 
     it('should find user by username', async () => {
-      const result = await db.select().from(users).where(eq(users.username, 'testread'));
+      const result = await db
+        .select()
+        .from(users)
+        .where(eq(users.username, 'testread'));
 
       expect(result).toHaveLength(1);
       expect(result[0].id).toBe(testUserId);
@@ -151,7 +169,10 @@ describe.skipIf(isCI)('Users CRUD Operations', () => {
 
     it('should return empty array for non-existent user', async () => {
       const nonExistentId = '123e4567-e89b-12d3-a456-426614174000';
-      const result = await db.select().from(users).where(eq(users.id, nonExistentId));
+      const result = await db
+        .select()
+        .from(users)
+        .where(eq(users.id, nonExistentId));
 
       expect(result).toHaveLength(0);
     });
@@ -162,7 +183,7 @@ describe.skipIf(isCI)('Users CRUD Operations', () => {
       const newUser: NewUser = {
         email: 'test-update@example.com',
         username: 'testupdate',
-        displayName: 'Test Update User'
+        displayName: 'Test Update User',
       };
       const result = await db.insert(users).values(newUser).returning();
       testUserId = result[0].id;
@@ -199,7 +220,7 @@ describe.skipIf(isCI)('Users CRUD Operations', () => {
       const updates = {
         displayName: 'Multi Update User',
         avatarUrl: 'https://example.com/multi-avatar.jpg',
-        updatedAt: new Date()
+        updatedAt: new Date(),
       };
 
       const result = await db
@@ -219,26 +240,35 @@ describe.skipIf(isCI)('Users CRUD Operations', () => {
       const newUser: NewUser = {
         email: 'test-delete@example.com',
         username: 'testdelete',
-        displayName: 'Test Delete User'
+        displayName: 'Test Delete User',
       };
       const result = await db.insert(users).values(newUser).returning();
       testUserId = result[0].id;
     });
 
     it('should delete user by id', async () => {
-      const result = await db.delete(users).where(eq(users.id, testUserId)).returning();
+      const result = await db
+        .delete(users)
+        .where(eq(users.id, testUserId))
+        .returning();
 
       expect(result).toHaveLength(1);
       expect(result[0].id).toBe(testUserId);
 
       // 削除されたことを確認
-      const checkResult = await db.select().from(users).where(eq(users.id, testUserId));
+      const checkResult = await db
+        .select()
+        .from(users)
+        .where(eq(users.id, testUserId));
       expect(checkResult).toHaveLength(0);
     });
 
     it('should return empty array when deleting non-existent user', async () => {
       const nonExistentId = '123e4567-e89b-12d3-a456-426614174000';
-      const result = await db.delete(users).where(eq(users.id, nonExistentId)).returning();
+      const result = await db
+        .delete(users)
+        .where(eq(users.id, nonExistentId))
+        .returning();
 
       expect(result).toHaveLength(0);
     });
@@ -247,23 +277,46 @@ describe.skipIf(isCI)('Users CRUD Operations', () => {
   describe('Query Multiple Users', () => {
     beforeEach(async () => {
       const testUsers: NewUser[] = [
-        { email: 'test-multi1@example.com', username: 'testmulti1', displayName: 'Multi User 1' },
-        { email: 'test-multi2@example.com', username: 'testmulti2', displayName: 'Multi User 2' },
-        { email: 'test-multi3@example.com', username: 'testmulti3', displayName: 'Multi User 3' }
+        {
+          email: 'test-multi1@example.com',
+          username: 'testmulti1',
+          displayName: 'Multi User 1',
+        },
+        {
+          email: 'test-multi2@example.com',
+          username: 'testmulti2',
+          displayName: 'Multi User 2',
+        },
+        {
+          email: 'test-multi3@example.com',
+          username: 'testmulti3',
+          displayName: 'Multi User 3',
+        },
       ];
 
       await db.insert(users).values(testUsers);
     });
 
     it('should retrieve all test users', async () => {
-      const result = await db.select().from(users).where(like(users.email, 'test-multi%'));
+      const result = await db
+        .select()
+        .from(users)
+        .where(like(users.email, 'test-multi%'));
 
       expect(result).toHaveLength(3);
-      expect(result.map(u => u.username).sort()).toEqual(['testmulti1', 'testmulti2', 'testmulti3']);
+      expect(result.map((u) => u.username).sort()).toEqual([
+        'testmulti1',
+        'testmulti2',
+        'testmulti3',
+      ]);
     });
 
     it('should limit query results', async () => {
-      const result = await db.select().from(users).where(like(users.email, 'test-multi%')).limit(2);
+      const result = await db
+        .select()
+        .from(users)
+        .where(like(users.email, 'test-multi%'))
+        .limit(2);
 
       expect(result).toHaveLength(2);
     });

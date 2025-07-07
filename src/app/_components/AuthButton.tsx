@@ -1,6 +1,7 @@
 'use client';
 
 import { Alert, Button, Group, Text } from '@mantine/core';
+import React from 'react';
 import { useAuth } from '@/lib/auth/useAuth';
 
 export function AuthButton() {

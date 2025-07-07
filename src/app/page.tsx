@@ -1,4 +1,5 @@
 import { Button, Container, Group, Stack, Text, Title } from '@mantine/core';
+import React from 'react';
 import { AuthButton } from '@/app/_components/AuthButton';
 import { NotificationButton } from '@/app/_components/NotificationButton';
 

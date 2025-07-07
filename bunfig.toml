@@ -1,6 +1,0 @@
-[test]
-    # テスト環境設定
-    preload = ["./test/setup.ts", "./test/happydom.ts"]
-    coverage = true
-    # React Testing Library用の設定
-    env = { NODE_ENV = "test" }

@@ -1,5 +1,5 @@
-import { afterAll, describe, expect, it } from 'bun:test';
 import { sql as drizzleSql } from 'drizzle-orm';
+import { afterAll, describe, expect, it } from 'vitest';
 import { users } from '../schema';
 import { closeConnection, db, testConnection } from './utils/connection';
 

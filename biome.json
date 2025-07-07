@@ -28,6 +28,7 @@
     }
   },
   "javascript": {
+    "jsxRuntime": "reactClassic",
     "formatter": {
       "quoteStyle": "single",
       "semicolons": "always"

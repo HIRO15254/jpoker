@@ -1,4 +1,5 @@
 import { Button, Container, Group, Stack, Text, Title } from '@mantine/core';
+import { AuthButton } from '@/app/_components/AuthButton';
 import { NotificationButton } from '@/app/_components/NotificationButton';
 
 export default function Home() {
@@ -15,6 +16,7 @@ export default function Home() {
 
         <Group>
           <NotificationButton />
+          <AuthButton />
           <Button variant="outline">ゲーム開始</Button>
         </Group>
 

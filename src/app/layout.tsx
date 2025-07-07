@@ -4,7 +4,11 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
 
-import {ColorSchemeScript, mantineHtmlProps, MantineProvider} from '@mantine/core';
+import {
+  ColorSchemeScript,
+  MantineProvider,
+  mantineHtmlProps,
+} from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
 
 const geistSans = Geist({

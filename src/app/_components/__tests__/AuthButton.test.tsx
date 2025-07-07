@@ -1,14 +1,11 @@
-import { describe, expect, it, mock } from 'bun:test';
 import { MantineProvider } from '@mantine/core';
 import { fireEvent, render } from '@testing-library/react';
+import React from 'react';
+import { describe, expect, it, vi } from 'vitest';
 import { AuthButton } from '../AuthButton';
 
-const mockSignInWithDiscord = mock(() => Promise.resolve());
-const mockSignOut = mock(() => Promise.resolve());
-const mockUseAuth = mock();
-
-mock.module('@/lib/auth/useAuth', () => ({
-  useAuth: mockUseAuth,
+vi.mock('@/lib/auth/useAuth', () => ({
+  useAuth: vi.fn(),
 }));
 
 const renderWithProvider = (component: React.ReactElement) => {
@@ -16,8 +13,12 @@ const renderWithProvider = (component: React.ReactElement) => {
 };
 
 describe('AuthButton', () => {
-  it('未認証時にDiscordログインボタンが表示される', () => {
-    mockUseAuth.mockReturnValue({
+  it('未認証時にDiscordログインボタンが表示される', async () => {
+    const { useAuth } = await import('@/lib/auth/useAuth');
+    const mockSignInWithDiscord = vi.fn();
+    const mockSignOut = vi.fn();
+
+    vi.mocked(useAuth).mockReturnValue({
       user: null,
       isLoading: false,
       isAuthenticated: false,
@@ -31,9 +32,20 @@ describe('AuthButton', () => {
     expect(screen.getByText('Discordでログイン')).toBeInTheDocument();
   });
 
-  it('認証済み時にユーザー情報とログアウトボタンが表示される', () => {
-    mockUseAuth.mockReturnValue({
-      user: { id: '1', email: 'test@example.com' },
+  it('認証済み時にユーザー情報とログアウトボタンが表示される', async () => {
+    const { useAuth } = await import('@/lib/auth/useAuth');
+    const mockSignInWithDiscord = vi.fn();
+    const mockSignOut = vi.fn();
+
+    vi.mocked(useAuth).mockReturnValue({
+      user: {
+        id: '1',
+        email: 'test@example.com',
+        app_metadata: {},
+        user_metadata: {},
+        aud: 'authenticated',
+        created_at: '2024-01-01T00:00:00Z',
+      },
       isLoading: false,
       isAuthenticated: true,
       error: null,
@@ -47,8 +59,12 @@ describe('AuthButton', () => {
     expect(screen.getByText('ログアウト')).toBeInTheDocument();
   });
 
-  it('ローディング中に適切な表示がされる', () => {
-    mockUseAuth.mockReturnValue({
+  it('ローディング中に適切な表示がされる', async () => {
+    const { useAuth } = await import('@/lib/auth/useAuth');
+    const mockSignInWithDiscord = vi.fn();
+    const mockSignOut = vi.fn();
+
+    vi.mocked(useAuth).mockReturnValue({
       user: null,
       isLoading: true,
       isAuthenticated: false,
@@ -63,7 +79,11 @@ describe('AuthButton', () => {
   });
 
   it('Discordログインボタンクリック時にsignInWithDiscord関数が呼ばれる', async () => {
-    mockUseAuth.mockReturnValue({
+    const { useAuth } = await import('@/lib/auth/useAuth');
+    const mockSignInWithDiscord = vi.fn();
+    const mockSignOut = vi.fn();
+
+    vi.mocked(useAuth).mockReturnValue({
       user: null,
       isLoading: false,
       isAuthenticated: false,
@@ -81,8 +101,19 @@ describe('AuthButton', () => {
   });
 
   it('ログアウトボタンクリック時にsignOut関数が呼ばれる', async () => {
-    mockUseAuth.mockReturnValue({
-      user: { id: '1', email: 'test@example.com' },
+    const { useAuth } = await import('@/lib/auth/useAuth');
+    const mockSignInWithDiscord = vi.fn();
+    const mockSignOut = vi.fn();
+
+    vi.mocked(useAuth).mockReturnValue({
+      user: {
+        id: '1',
+        email: 'test@example.com',
+        app_metadata: {},
+        user_metadata: {},
+        aud: 'authenticated',
+        created_at: '2024-01-01T00:00:00Z',
+      },
       isLoading: false,
       isAuthenticated: true,
       error: null,
@@ -98,8 +129,12 @@ describe('AuthButton', () => {
     expect(mockSignOut).toHaveBeenCalled();
   });
 
-  it('エラーメッセージが適切に表示される', () => {
-    mockUseAuth.mockReturnValue({
+  it('エラーメッセージが適切に表示される', async () => {
+    const { useAuth } = await import('@/lib/auth/useAuth');
+    const mockSignInWithDiscord = vi.fn();
+    const mockSignOut = vi.fn();
+
+    vi.mocked(useAuth).mockReturnValue({
       user: null,
       isLoading: false,
       isAuthenticated: false,

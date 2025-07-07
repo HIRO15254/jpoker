@@ -14,9 +14,11 @@ Next.js 15.3.4とTypeScriptを使用したポーカーアプリケーション (
 - `bun biome:fix` - Biomeによる自動修正
 
 **テスト**
-- `bun test` - Bunテストランナーでテスト実行
-- `bun test:watch` - テストのwatch mode
-- `bun test:coverage` - カバレッジレポート付きテスト
+- `bun run test` - Vitestを使用したテスト実行（TypeScript型チェック含む）
+- `bun run test:watch` - テストのwatch mode（型チェック含む）
+- `bun run test:coverage` - カバレッジレポート付きテスト（型チェック含む）
+- `bun run test:ui` - Vitest UI でのテスト実行（型チェック含む）
+- `bun run test:ci` - CI環境でのテスト実行（型チェック含む）
 
 **パッケージ管理**
 - `bun add <package-name>` - 依存関係追加
@@ -43,7 +45,7 @@ Next.js 15.3.4とTypeScriptを使用したポーカーアプリケーション (
 2. **テストファースト**: 機能のテストを先に書く
 3. **実装**: テストを通すコードを書く
 4. **品質チェック**: `bun biome:check`を実行
-5. **テスト実行**: `bun test`でテストを確認
+5. **テスト実行**: `bun run test`でテストを確認
 6. **リファクタリング**: 必要に応じてコードを改善
 7. プルリクエスト作成
 
@@ -60,7 +62,8 @@ Next.js 15.3.4とTypeScriptを使用したポーカーアプリケーション (
 - **Drizzle ORM**: TypeScript-first ORM
 
 **開発ツール**
-- **Bun**: パッケージマネージャー、テストランナー
+- **Bun**: パッケージマネージャー
+- **Vitest**: テストフレームワーク、モック、カバレッジ
 - **Biome**: Linter、Formatter（統合品質チェック）
 - **Testing Library**: React Testing Library、Jest DOM
 
@@ -98,7 +101,7 @@ public/                    # 静的ファイル
 
 ## 品質保証
 **自動チェック**
-- コミット前に必ず`bun biome:check`と`bun test`を実行
+- コミット前に必ず`bun biome:check`と`bun run test`を実行
 - CI/CDパイプラインでテストとビルドを自動化
 - 高いテストカバレッジを維持
 
@@ -106,6 +109,11 @@ public/                    # 静的ファイル
 - 実装詳細ではなく動作をテスト
 - テストを生きたドキュメントとして活用
 - リファクタリング時の信頼性を確保
+
+**型安全性の原則**
+- `as any`の使用を禁止 - 常に正確な型定義を使用
+- モックでも完全な型を作成し、型安全性を維持
+- 型エラーは根本的な設計問題を示すため、型でごまかさない
 
 ## 公式ドキュメント参照
 **必須参照ドキュメント**
@@ -116,6 +124,7 @@ public/                    # 静的ファイル
 - **Supabase**: [公式ドキュメント](https://supabase.com/docs) - データベース、認証、API
 - **Drizzle ORM**: [公式ドキュメント](https://orm.drizzle.team/docs/overview) - スキーマ定義、クエリ
 - **Bun**: [公式ドキュメント](https://bun.sh/docs) - パッケージ管理、テストランナー
+- **Vitest**: [公式ドキュメント](https://vitest.dev/) - テストフレームワーク、モック、カバレッジ
 - **Biome**: [公式ドキュメント](https://biomejs.dev/ja/) - Linter、Formatter設定
 
 **参照ガイドライン**

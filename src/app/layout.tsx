@@ -4,7 +4,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
 
-import { ColorSchemeScript, MantineProvider } from '@mantine/core';
+import {ColorSchemeScript, mantineHtmlProps, MantineProvider} from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
 
 const geistSans = Geist({
@@ -28,7 +28,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja">
+    <html lang="ja" {...mantineHtmlProps}>
       <head>
         <ColorSchemeScript />
       </head>

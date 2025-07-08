@@ -9,6 +9,11 @@ vi.mock('@/app/_components/AuthButton', () => ({
   AuthButton: () => <div>AuthButton Mock</div>,
 }));
 
+// UserDataをモック
+vi.mock('@/app/_components/UserData', () => ({
+  UserData: () => <div>UserData Mock</div>,
+}));
+
 const renderWithMantine = (component: React.ReactElement) => {
   return render(<MantineProvider>{component}</MantineProvider>);
 };

@@ -84,6 +84,9 @@ public/                    # 静的ファイル
 - **Server Components優先**: SSRとデータフェッチを重視
 - **Composition Pattern**: 再利用可能なコンポーネント構成
 - **Container/Presentational**: データロジックと表示の分離
+  - **Container**: データ取得・状態管理を担当（例: `UserData`）
+  - **Presentation**: UI描画のみを担当（例: `UserDataPresentation`）
+  - **テスト**: Presentationコンポーネントに対してUIテストを作成
 
 **パフォーマンス**
 - **多層キャッシュ**: Full Route Cache、Data Cache、Router Cache
@@ -114,6 +117,25 @@ public/                    # 静的ファイル
 - `as any`の使用を禁止 - 常に正確な型定義を使用
 - モックでも完全な型を作成し、型安全性を維持
 - 型エラーは根本的な設計問題を示すため、型でごまかさない
+
+**データベースアクセス**
+- **Drizzle ORM必須**: 全てのデータベースクエリはDrizzle ORMを使用
+- 生のSQLや他のクエリ方法は禁止
+- スキーマ定義とクエリビルダーによる型安全性を重視
+
+**API設計**
+- **認証エンドポイント**: `/me`エンドポイントのみでSupabaseログインユーザー取得を許可
+- **他のエンドポイント**: `/me`以外でのSupabaseログインユーザー取得は禁止
+- **認証情報が必要な場合**: `/me`をフェッチしてユーザー情報を取得する
+
+**Server Actions と revalidatePath**
+- **認証状態変更時**: ログイン・ログアウト後はrevalidatePathでサーバーコンポーネントを更新
+- **実装場所**: `/lib/actions/auth.ts`にServer Actionを定義
+- **更新対象**: 認証状態依存ページは`revalidatePath('/', 'layout')`で全体更新
+- **呼び出し場所**: 
+  - ログイン後: 認証コールバックページで`revalidateAfterLogin()`
+  - ログアウト時: AuthButtonコンポーネントで`signOut()` Server Action
+  - 認証状態変更時: useAuthフックで`revalidateAuthState()`
 
 ## 公式ドキュメント参照
 **必須参照ドキュメント**

@@ -8,6 +8,11 @@ vi.mock('@/lib/auth/useAuth', () => ({
   useAuth: vi.fn(),
 }));
 
+// Server Actionをモック
+vi.mock('@/lib/actions/auth', () => ({
+  signOut: vi.fn(),
+}));
+
 const renderWithProvider = (component: React.ReactElement) => {
   return render(<MantineProvider>{component}</MantineProvider>);
 };
@@ -100,8 +105,9 @@ describe('AuthButton', () => {
     expect(mockSignInWithDiscord).toHaveBeenCalled();
   });
 
-  it('ログアウトボタンクリック時にsignOut関数が呼ばれる', async () => {
+  it('ログアウトボタンクリック時にServer Actionが呼ばれる', async () => {
     const { useAuth } = await import('@/lib/auth/useAuth');
+    const { signOut: serverSignOut } = await import('@/lib/actions/auth');
     const mockSignInWithDiscord = vi.fn();
     const mockSignOut = vi.fn();
 
@@ -126,7 +132,8 @@ describe('AuthButton', () => {
     const logoutButton = screen.getByText('ログアウト');
     fireEvent.click(logoutButton);
 
-    expect(mockSignOut).toHaveBeenCalled();
+    // Server Actionが呼ばれることを確認
+    expect(vi.mocked(serverSignOut)).toHaveBeenCalled();
   });
 
   it('エラーメッセージが適切に表示される', async () => {

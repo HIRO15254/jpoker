@@ -2,7 +2,8 @@
 
 import type { User } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';
-import { supabase } from './supabase';
+import { revalidateAuthState } from '../actions/auth';
+import { createClientSideSupabase } from '../supabase/client';
 
 interface UseAuthReturn {
   user: User | null;
@@ -24,7 +25,7 @@ export function useAuth(): UseAuthReturn {
       try {
         const {
           data: { session },
-        } = await supabase.auth.getSession();
+        } = await createClientSideSupabase.auth.getSession();
         setUser(session?.user ?? null);
       } catch (err) {
         setError('セッションの取得に失敗しました');
@@ -39,11 +40,20 @@ export function useAuth(): UseAuthReturn {
     // 認証状態の監視
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-      setError(null);
-      setIsLoading(false);
-    });
+    } = createClientSideSupabase.auth.onAuthStateChange(
+      async (_event, session) => {
+        setUser(session?.user ?? null);
+        setError(null);
+        setIsLoading(false);
+
+        // 認証状態が変更された際にサーバーコンポーネントを再検証
+        try {
+          await revalidateAuthState();
+        } catch (error) {
+          console.error('Failed to revalidate auth state:', error);
+        }
+      },
+    );
 
     return () => subscription.unsubscribe();
   }, []);
@@ -53,7 +63,7 @@ export function useAuth(): UseAuthReturn {
       setError(null);
       setIsLoading(true);
 
-      const { error } = await supabase.auth.signInWithOAuth({
+      const { error } = await createClientSideSupabase.auth.signInWithOAuth({
         provider: 'discord',
         options: {
           redirectTo: `${window.location.origin}`,
@@ -79,7 +89,7 @@ export function useAuth(): UseAuthReturn {
       setError(null);
       setIsLoading(true);
 
-      const { error } = await supabase.auth.signOut();
+      const { error } = await createClientSideSupabase.auth.signOut();
 
       if (error) {
         setError(error.message);

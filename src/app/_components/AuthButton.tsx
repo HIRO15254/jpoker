@@ -2,6 +2,7 @@
 
 import { Alert, Button, Group, Text } from '@mantine/core';
 import React from 'react';
+import { signOut as serverSignOut } from '@/lib/actions/auth';
 import { useAuth } from '@/lib/auth/useAuth';
 
 export function AuthButton() {
@@ -24,9 +25,16 @@ export function AuthButton() {
 
   const handleSignOut = async () => {
     try {
-      await signOut();
+      // Server Actionを使用してログアウトとrevalidatePathを実行
+      await serverSignOut();
     } catch (err) {
       console.error('Logout failed:', err);
+      // フォールバック: クライアントサイドでログアウト
+      try {
+        await signOut();
+      } catch (fallbackErr) {
+        console.error('Fallback logout failed:', fallbackErr);
+      }
     }
   };
 

@@ -1,7 +1,8 @@
 import { Button, Container, Group, Stack, Text, Title } from '@mantine/core';
-import React from 'react';
+import React, { Suspense } from 'react';
 import { AuthButton } from '@/app/_components/AuthButton';
 import { NotificationButton } from '@/app/_components/NotificationButton';
+import { UserData } from '@/app/_components/UserData';
 
 export default function Home() {
   return (
@@ -14,6 +15,10 @@ export default function Home() {
         <Text size="lg" ta="center" c="dimmed">
           オンラインポーカーアプリケーション
         </Text>
+
+        <Suspense fallback={<Text size="sm">ユーザー情報を読み込み中...</Text>}>
+          <UserData />
+        </Suspense>
 
         <Group>
           <NotificationButton />

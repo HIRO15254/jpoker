@@ -5,8 +5,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useAuth } from '../useAuth';
 
 // Supabaseモジュールをモック
-vi.mock('@/lib/auth/supabase', () => ({
-  supabase: {
+vi.mock('@/lib/supabase/client', () => ({
+  createClientSideSupabase: {
     auth: {
       getSession: vi.fn(),
       signInWithOAuth: vi.fn(),
@@ -22,10 +22,10 @@ describe('useAuth', () => {
     vi.clearAllMocks();
 
     // supabaseモックを取得
-    const { supabase } = await import('@/lib/auth/supabase');
+    const { createClientSideSupabase } = await import('@/lib/supabase/client');
 
     // デフォルトの戻り値を再設定
-    vi.mocked(supabase.auth.getSession).mockResolvedValue({
+    vi.mocked(createClientSideSupabase.auth.getSession).mockResolvedValue({
       data: { session: null },
       error: null,
     });
@@ -33,14 +33,18 @@ describe('useAuth', () => {
       data: { provider: 'discord', url: 'https://discord.com/oauth/redirect' },
       error: null,
     };
-    vi.mocked(supabase.auth.signInWithOAuth).mockResolvedValue(oauthResponse);
-    vi.mocked(supabase.auth.signOut).mockResolvedValue({ error: null });
+    vi.mocked(createClientSideSupabase.auth.signInWithOAuth).mockResolvedValue(
+      oauthResponse,
+    );
+    vi.mocked(createClientSideSupabase.auth.signOut).mockResolvedValue({
+      error: null,
+    });
     const mockSubscription: Subscription = {
       id: 'test-id',
       callback: vi.fn(),
       unsubscribe: vi.fn(),
     };
-    vi.mocked(supabase.auth.onAuthStateChange).mockReturnValue({
+    vi.mocked(createClientSideSupabase.auth.onAuthStateChange).mockReturnValue({
       data: { subscription: mockSubscription },
     });
   });
@@ -64,22 +68,21 @@ describe('useAuth', () => {
       writable: true,
     });
 
-    const { supabase } = await import('@/lib/auth/supabase');
+    const { createClientSideSupabase } = await import('@/lib/supabase/client');
     const oauthResponse: OAuthResponse = {
       data: { provider: 'discord', url: 'https://discord.com/oauth/redirect' },
       error: null,
     };
-    vi.mocked(supabase.auth.signInWithOAuth).mockResolvedValueOnce(
-      oauthResponse,
-    );
+    vi.mocked(
+      createClientSideSupabase.auth.signInWithOAuth,
+    ).mockResolvedValueOnce(oauthResponse);
 
     const { result } = renderHook(() => useAuth());
-
     await act(async () => {
       await result.current.signInWithDiscord();
     });
 
-    expect(supabase.auth.signInWithOAuth).toHaveBeenCalledWith({
+    expect(createClientSideSupabase.auth.signInWithOAuth).toHaveBeenCalledWith({
       provider: 'discord',
       options: {
         redirectTo: 'http://localhost:3000',
@@ -88,14 +91,14 @@ describe('useAuth', () => {
   });
 
   it('ログアウト機能が正しく動作する', async () => {
-    const { supabase } = await import('@/lib/auth/supabase');
+    const { createClientSideSupabase } = await import('@/lib/supabase/client');
     const { result } = renderHook(() => useAuth());
 
     await act(async () => {
       await result.current.signOut();
     });
 
-    expect(supabase.auth.signOut).toHaveBeenCalled();
+    expect(createClientSideSupabase.auth.signOut).toHaveBeenCalled();
   });
 
   it('認証エラーが適切に処理される', async () => {
@@ -104,16 +107,16 @@ describe('useAuth', () => {
       writable: true,
     });
 
-    const { supabase } = await import('@/lib/auth/supabase');
+    const { createClientSideSupabase } = await import('@/lib/supabase/client');
     const errorMessage = 'OAuth provider error';
     const authError = new AuthError(errorMessage, 400, 'oauth_error');
     const errorResponse: OAuthResponse = {
       data: { provider: 'discord', url: null },
       error: authError,
     };
-    vi.mocked(supabase.auth.signInWithOAuth).mockResolvedValueOnce(
-      errorResponse,
-    );
+    vi.mocked(
+      createClientSideSupabase.auth.signInWithOAuth,
+    ).mockResolvedValueOnce(errorResponse);
 
     const { result } = renderHook(() => useAuth());
 
@@ -125,12 +128,12 @@ describe('useAuth', () => {
   });
 
   it('認証状態の変更が適切に監視される', async () => {
-    const { supabase } = await import('@/lib/auth/supabase');
+    const { createClientSideSupabase } = await import('@/lib/supabase/client');
 
     await act(async () => {
       renderHook(() => useAuth());
     });
 
-    expect(supabase.auth.onAuthStateChange).toHaveBeenCalled();
+    expect(createClientSideSupabase.auth.onAuthStateChange).toHaveBeenCalled();
   });
 });

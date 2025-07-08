@@ -2,6 +2,7 @@
 
 import { Button } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
+import React from 'react';
 
 export function NotificationButton() {
   const showNotification = () => {

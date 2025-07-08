@@ -3,7 +3,14 @@
     "allow": [
       "Bash(git add:*)",
       "WebFetch(domain:supabase.com)",
-      "Bash(bun test:*)"
+      "Bash(bun test:*)",
+      "Bash(bun biome:check:*)",
+      "Bash(bun biome:fix:*)",
+      "Bash(vitest run:*)",
+      "Bash(bun run:*)",
+      "WebFetch(domain:biomejs.dev)",
+      "Bash(npx tsc:*)",
+      "mcp__ide__getDiagnostics"
     ],
     "deny": []
   }

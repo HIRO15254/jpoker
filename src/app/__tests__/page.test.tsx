@@ -1,8 +1,13 @@
-import { describe, expect, it } from 'bun:test';
 import { MantineProvider } from '@mantine/core';
 import { render } from '@testing-library/react';
-import type React from 'react';
+import React from 'react';
+import { describe, expect, it, vi } from 'vitest';
 import Home from '../page';
+
+// AuthButtonをモック
+vi.mock('@/app/_components/AuthButton', () => ({
+  AuthButton: () => <div>AuthButton Mock</div>,
+}));
 
 const renderWithMantine = (component: React.ReactElement) => {
   return render(<MantineProvider>{component}</MantineProvider>);

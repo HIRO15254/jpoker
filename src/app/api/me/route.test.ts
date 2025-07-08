@@ -1,3 +1,4 @@
+import { NextRequest } from 'next/server';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { User } from '@/lib/db/schema/users';
 import { createServerSideClient } from '@/lib/supabase/server';
@@ -17,6 +18,8 @@ vi.mock('@/lib/db/connection', () => ({
 }));
 
 // 型定義
+import type { SupabaseClient } from '@supabase/supabase-js';
+
 interface MockSupabaseClient {
   auth: {
     getUser: ReturnType<typeof vi.fn>;
@@ -56,7 +59,9 @@ describe('/api/me', () => {
 
   beforeEach(async () => {
     vi.clearAllMocks();
-    vi.mocked(createServerSideClient).mockResolvedValue(mockSupabaseClient);
+    vi.mocked(createServerSideClient).mockResolvedValue(
+      mockSupabaseClient as unknown as SupabaseClient,
+    );
 
     // Drizzleクエリビルダーのモック設定
     mockDb.select.mockReturnValue(mockQueryBuilder);
@@ -102,7 +107,7 @@ describe('/api/me', () => {
       // 既存ユーザーが存在する場合
       mockQueryBuilder.limit.mockResolvedValue([mockDbUser]);
 
-      const mockRequest = new Request('http://localhost:3000/api/me');
+      const mockRequest = new NextRequest('http://localhost:3000/api/me');
 
       // Act
       const response = await GET(mockRequest);
@@ -124,7 +129,7 @@ describe('/api/me', () => {
         error: null,
       });
 
-      const mockRequest = new Request('http://localhost:3000/api/me');
+      const mockRequest = new NextRequest('http://localhost:3000/api/me');
 
       // Act
       const response = await GET(mockRequest);
@@ -147,7 +152,7 @@ describe('/api/me', () => {
         error: { message: 'Invalid JWT token' },
       });
 
-      const mockRequest = new Request('http://localhost:3000/api/me');
+      const mockRequest = new NextRequest('http://localhost:3000/api/me');
 
       // Act
       const response = await GET(mockRequest);
@@ -192,7 +197,7 @@ describe('/api/me', () => {
       mockQueryBuilder.limit.mockResolvedValue([]);
       mockQueryBuilder.returning.mockResolvedValue([mockCreatedUser]);
 
-      const mockRequest = new Request('http://localhost:3000/api/me');
+      const mockRequest = new NextRequest('http://localhost:3000/api/me');
 
       // Act
       const response = await GET(mockRequest);
@@ -225,7 +230,7 @@ describe('/api/me', () => {
         new Error('Database connection failed'),
       );
 
-      const mockRequest = new Request('http://localhost:3000/api/me');
+      const mockRequest = new NextRequest('http://localhost:3000/api/me');
 
       // Act
       const response = await GET(mockRequest);

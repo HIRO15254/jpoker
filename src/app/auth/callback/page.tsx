@@ -1,11 +1,10 @@
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { revalidateAfterLogin } from '@/lib/actions/auth';
+import { Suspense, useEffect, useState } from 'react';
 import { createClientSideSupabase } from '@/lib/supabase/client';
 
-export default function AuthCallbackPage() {
+function AuthCallbackContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [status, setStatus] = useState('認証処理中...');
@@ -20,9 +19,6 @@ export default function AuthCallbackPage() {
 
         if (currentSession.session) {
           setStatus('ログイン成功！リダイレクト中...');
-
-          // サーバーコンポーネントのデータを再検証
-          await revalidateAfterLogin();
 
           const redirectTo = searchParams.get('redirect') || '/';
           setTimeout(() => router.push(redirectTo), 1000);
@@ -60,9 +56,6 @@ export default function AuthCallbackPage() {
         if (data.session) {
           setStatus('ログイン成功！リダイレクト中...');
 
-          // サーバーコンポーネントのデータを再検証
-          await revalidateAfterLogin();
-
           // リダイレクト先を取得
           const redirectTo = searchParams.get('redirect') || '/';
 
@@ -96,5 +89,13 @@ export default function AuthCallbackPage() {
         <div>{status}</div>
       </div>
     </div>
+  );
+}
+
+export default function AuthCallbackPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <AuthCallbackContent />
+    </Suspense>
   );
 }

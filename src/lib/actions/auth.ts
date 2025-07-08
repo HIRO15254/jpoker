@@ -5,16 +5,6 @@ import { redirect } from 'next/navigation';
 import { createServerSideClient } from '@/lib/supabase/server';
 
 /**
- * ログイン後のデータを再検証するServer Action
- */
-export async function revalidateAfterLogin() {
-  // ホームページのサーバーコンポーネントを再検証
-  revalidatePath('/');
-  // 必要に応じて他のページも再検証
-  revalidatePath('/dashboard');
-}
-
-/**
  * ログアウト処理を行うServer Action
  */
 export async function signOut() {

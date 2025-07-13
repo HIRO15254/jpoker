@@ -1,6 +1,6 @@
 import { MantineProvider } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
-import { NotificationsProvider } from '@mantine/notifications';
+import { Notifications } from '@mantine/notifications';
 import React, { type ReactNode } from 'react';
 
 interface MantineTestProviderProps {
@@ -10,11 +10,10 @@ interface MantineTestProviderProps {
 export function MantineTestProvider({ children }: MantineTestProviderProps) {
   return (
     <MantineProvider>
-      <NotificationsProvider>
-        <ModalsProvider>
-          {children}
-        </ModalsProvider>
-      </NotificationsProvider>
+      <ModalsProvider>
+        <Notifications />
+        {children}
+      </ModalsProvider>
     </MantineProvider>
   );
 }

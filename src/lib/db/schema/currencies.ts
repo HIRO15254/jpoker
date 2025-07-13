@@ -6,6 +6,8 @@ import {
   uuid,
   varchar,
 } from 'drizzle-orm/pg-core';
+import { currencyTransactions } from './currency-transactions';
+import { userBalances } from './user-balances';
 
 export const currencies = pgTable('currencies', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -17,8 +19,8 @@ export const currencies = pgTable('currencies', {
 });
 
 export const currenciesRelations = relations(currencies, ({ many }) => ({
-  currencyTransactions: many('currencyTransactions'),
-  userBalances: many('userBalances'),
+  currencyTransactions: many(currencyTransactions),
+  userBalances: many(userBalances),
 }));
 
 export type Currency = typeof currencies.$inferSelect;

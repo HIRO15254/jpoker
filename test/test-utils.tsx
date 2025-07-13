@@ -1,7 +1,7 @@
 import { render as rtlRender, type RenderOptions } from '@testing-library/react';
 import { MantineProvider } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
-import { NotificationsProvider } from '@mantine/notifications';
+import { Notifications } from '@mantine/notifications';
 import React, { type ReactElement, type ReactNode } from 'react';
 
 interface AllTheProvidersProps {
@@ -11,11 +11,10 @@ interface AllTheProvidersProps {
 function AllTheProviders({ children }: AllTheProvidersProps) {
   return (
     <MantineProvider>
-      <NotificationsProvider>
-        <ModalsProvider>
-          {children}
-        </ModalsProvider>
-      </NotificationsProvider>
+      <Notifications />
+      <ModalsProvider>
+        {children}
+      </ModalsProvider>
     </MantineProvider>
   );
 }

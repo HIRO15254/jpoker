@@ -10,7 +10,10 @@
       "Bash(bun run:*)",
       "WebFetch(domain:biomejs.dev)",
       "Bash(npx tsc:*)",
-      "mcp__ide__getDiagnostics"
+      "mcp__ide__getDiagnostics",
+      "WebFetch(domain:mantine.dev)",
+      "Bash(find:*)",
+      "Bash(mv:*)"
     ],
     "deny": []
   }

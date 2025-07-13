@@ -10,6 +10,7 @@ function AuthCallbackContent() {
   const [status, setStatus] = useState('認証処理中...');
 
   useEffect(() => {
+    // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: ここは定型実装なので許す
     const handleAuthCallback = async () => {
       try {
         const supabase = createClientSideSupabase;

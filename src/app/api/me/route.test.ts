@@ -214,6 +214,11 @@ describe('/api/me', () => {
     });
 
     it('データベースエラーの場合は500エラーを返す', async () => {
+      // コンソールエラーを抑制
+      const consoleErrorSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+
       // Arrange
       const mockAuthUser = {
         id: 'auth-user-id-123',
@@ -242,6 +247,9 @@ describe('/api/me', () => {
         error: 'Internal server error',
         message: 'サーバーエラーが発生しました',
       });
+
+      // コンソールスパイをリストア
+      consoleErrorSpy.mockRestore();
     });
   });
 });

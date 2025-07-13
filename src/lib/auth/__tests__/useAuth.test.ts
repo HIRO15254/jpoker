@@ -63,10 +63,7 @@ describe('useAuth', () => {
 
   it('Discord OAuthログイン機能が正しく動作する', async () => {
     // window.location.originをモック
-    Object.defineProperty(window, 'location', {
-      value: { origin: 'http://localhost:3000' },
-      writable: true,
-    });
+    vi.stubGlobal('location', { origin: 'http://localhost:3000' });
 
     const { createClientSideSupabase } = await import('@/lib/supabase/client');
     const oauthResponse: OAuthResponse = {
@@ -88,6 +85,9 @@ describe('useAuth', () => {
         redirectTo: 'http://localhost:3000',
       },
     });
+
+    // Restore original location
+    vi.unstubAllGlobals();
   });
 
   it('ログアウト機能が正しく動作する', async () => {
@@ -102,10 +102,12 @@ describe('useAuth', () => {
   });
 
   it('認証エラーが適切に処理される', async () => {
-    Object.defineProperty(window, 'location', {
-      value: { origin: 'http://localhost:3000' },
-      writable: true,
-    });
+    // コンソールエラーを抑制
+    const consoleErrorSpy = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
+
+    vi.stubGlobal('location', { origin: 'http://localhost:3000' });
 
     const { createClientSideSupabase } = await import('@/lib/supabase/client');
     const errorMessage = 'OAuth provider error';
@@ -125,6 +127,12 @@ describe('useAuth', () => {
     });
 
     expect(result.current.error).toBe(errorMessage);
+
+    // コンソールスパイをリストア
+    consoleErrorSpy.mockRestore();
+
+    // Restore original location
+    vi.unstubAllGlobals();
   });
 
   it('認証状態の変更が適切に監視される', async () => {

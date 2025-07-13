@@ -9,7 +9,9 @@ import {
   MantineProvider,
   mantineHtmlProps,
 } from '@mantine/core';
+import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
+import React from 'react';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -38,8 +40,10 @@ export default function RootLayout({
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <MantineProvider>
-          <Notifications />
-          {children}
+          <ModalsProvider>
+            <Notifications />
+            {children}
+          </ModalsProvider>
         </MantineProvider>
       </body>
     </html>

@@ -102,19 +102,20 @@ export const CurrencyTransactionListPresentation = ({
               <TableTd>
                 <Text c={transaction.amount >= 0 ? 'green' : 'red'}>
                   {transaction.amount >= 0 ? '+' : ''}
-                  {transaction.amount.toLocaleString()}
+                  {transaction.amount.toLocaleString('ja-JP')}
                 </Text>
               </TableTd>
               <TableTd>
                 <Text size="sm" c="dimmed">
-                  {transaction.balanceBefore.toLocaleString()} →{' '}
-                  {transaction.balanceAfter.toLocaleString()}
+                  {`${transaction.balanceBefore.toLocaleString('ja-JP')} → ${transaction.balanceAfter.toLocaleString('ja-JP')}`}
                 </Text>
               </TableTd>
               <TableTd>
                 <Text size="sm">{transaction.description || '-'}</Text>
               </TableTd>
-              <TableTd>{transaction.createdAt.toLocaleDateString()}</TableTd>
+              <TableTd>
+                {transaction.createdAt.toLocaleDateString('ja-JP')}
+              </TableTd>
             </TableTr>
           ))}
         </TableTbody>

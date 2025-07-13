@@ -94,7 +94,9 @@ export const CurrencyListPresentation = ({
                   {currency.isActive ? 'アクティブ' : '無効'}
                 </Badge>
               </TableTd>
-              <TableTd>{currency.createdAt.toLocaleDateString()}</TableTd>
+              <TableTd>
+                {currency.createdAt.toLocaleDateString('ja-JP')}
+              </TableTd>
               <TableTd>
                 <Group gap="xs">
                   <ActionIcon

@@ -4,8 +4,15 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
 
-import { ColorSchemeScript, MantineProvider } from '@mantine/core';
+import {
+  ColorSchemeScript,
+  MantineProvider,
+  mantineHtmlProps,
+} from '@mantine/core';
+import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
+import React from 'react';
+import AppShell from './_components/AppShell';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -28,14 +35,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja">
+    <html lang="ja" {...mantineHtmlProps}>
       <head>
         <ColorSchemeScript />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <MantineProvider>
-          <Notifications />
-          {children}
+          <ModalsProvider>
+            <Notifications />
+            <AppShell>{children}</AppShell>
+          </ModalsProvider>
         </MantineProvider>
       </body>
     </html>

@@ -20,10 +20,26 @@ Next.js 15.3.4とTypeScriptを使用したポーカーアプリケーション (
 - `bun run test:ui` - Vitest UI でのテスト実行（型チェック含む）
 - `bun run test:ci` - CI環境でのテスト実行（型チェック含む）
 
+**データベース管理**
+- `bun run db:generate` - Drizzleスキーマ生成
+- `bun run db:migrate` - データベースマイグレーション実行
+- `bun run db:push` - スキーマをデータベースに直接プッシュ
+- `bun run db:studio` - Drizzle Studio起動（GUI管理ツール）
+- `bun run db:seed` - データベースシード実行
+
+**Supabase管理**
+- `bun run supabase:start` - ローカルSupabase環境起動
+- `bun run supabase:stop` - ローカルSupabase環境停止
+- `bun run supabase:status` - Supabase環境ステータス確認
+- `bun run supabase:reset` - データベースリセット
+
 **パッケージ管理**
 - `bun add <package-name>` - 依存関係追加
 - `bun add -d <package-name>` - 開発依存関係追加
 - `bun remove <package-name>` - パッケージ削除
+
+**カスタムコマンド**
+- `/init <タスク概要>` - 新機能開発のブランチ作成・仕様書生成
 
 ## 開発ワークフロー
 ### TDD サイクル
@@ -74,7 +90,22 @@ src/
 │   ├── layout.tsx         # ルートレイアウト
 │   ├── page.tsx           # ホームページ
 │   ├── _components/       # 共通コンポーネント
+│   ├── admin/             # 管理画面（理想的な設計パターン例）
+│   ├── api/               # API Routes
+│   ├── auth/              # 認証関連ページ
 │   └── __tests__/         # テストファイル
+├── lib/                   # 共通ライブラリ
+│   ├── actions/           # Server Actions
+│   ├── auth/              # 認証ロジック
+│   ├── db/                # データベース関連
+│   │   ├── connection.ts  # DB接続設定
+│   │   ├── schema/        # Drizzleスキーマ定義
+│   │   └── migrations/    # マイグレーションファイル
+│   └── supabase/          # Supabase設定
+├── types/                 # 型定義
+.claude/                   # カスタムコマンド
+├── commands/              # プロジェクト固有コマンド
+specs/                     # 仕様書
 test/                      # テスト設定
 public/                    # 静的ファイル
 ```
@@ -93,14 +124,96 @@ public/                    # 静的ファイル
 - **Suspense Streaming**: 段階的ローディング
 - **N+1クエリ防止**: 効率的なデータフェッチパターン
 
+## 標準ディレクトリ構造・設計パターン
+**`app/admin`を参考にした理想的な実装パターン**
+
+### 表示コンポーネント（一覧・詳細表示）
+```
+ComponentName/
+├── ComponentNameContainer.tsx       # Server Component
+│   ├── 'server-only'指定
+│   ├── Drizzle ORMによるデータフェッチ
+│   └── Presentationコンポーネントに props 注入
+├── ComponentNamePresentation.tsx    # Client Component
+│   ├── 'use client'指定
+│   ├── Mantineコンポーネント使用
+│   ├── UIロジック・イベントハンドリング
+│   └── 型安全なprops interface定義
+├── ComponentNamePresentation.test.tsx # Presentationテスト
+│   ├── @testing-library/react使用
+│   ├── ユーザー操作の動作テスト
+│   └── 実装詳細ではなく動作をテスト
+└── index.ts                        # エクスポート
+    └── Containerをデフォルトエクスポート
+```
+
+### フォームコンポーネント（作成・編集・削除）
+```
+forms/FormName/
+├── FormName.tsx                     # Client Component
+│   ├── 'use client'指定
+│   ├── Mantine useForm + zod4Resolver
+│   ├── Server Action呼び出し
+│   ├── Notifications連携
+│   └── Loading状態管理
+├── FormName.test.tsx               # フォームテスト
+│   ├── フォームバリデーションテスト
+│   ├── ユーザー入力シミュレーション
+│   └── 成功・エラーシナリオテスト
+├── formNameAction.ts               # Server Action
+│   ├── 'use server'指定
+│   ├── Zodスキーマバリデーション
+│   ├── Drizzle ORMによるCRUD操作
+│   └── ActionResult型の戻り値
+├── formNameAction.test.tsx         # Server Actionテスト
+│   ├── バリデーションテスト
+│   ├── データベース操作テスト
+│   └── エラーハンドリングテスト
+├── formNameSchema.ts               # Zodバリデーションスキーマ
+│   ├── drizzle-zod使用
+│   ├── createInsertSchema / createSelectSchema
+│   └── カスタムバリデーション定義
+└── index.ts                        # エクスポート
+    └── フォームコンポーネントのみエクスポート
+```
+
+### 設計原則詳細
+**Container/Presentation分離**
+- **Container（xxxContainer.tsx）**
+  - `import 'server-only'`必須
+  - データフェッチ専用（Drizzle ORMクエリ）
+  - ビジネスロジック処理
+  - Presentationに型安全なpropsを渡す
+
+- **Presentation（xxxPresentation.tsx）**  
+  - `'use client'`指定
+  - UI描画・ユーザーインタラクション専用
+  - Mantineコンポーネント活用
+  - 明確なprops interface定義
+
+**フォーム設計パターン**
+- **Mantine Form統合**: `useForm` + `zod4Resolver`で型安全なバリデーション
+- **Server Actions**: 'use server'でサーバーサイド処理、ActionResult型で統一
+- **Drizzle-Zod連携**: `createInsertSchema`でスキーマから自動生成
+
+**エクスポート戦略**
+- **index.ts**: 実装詳細を隠蔽、外部にはContainerのみ公開
+- **名前付きエクスポート**: テスト用途でPresentationも必要に応じて公開
+
+**テスト戦略**
+- **Presentationテスト**: UI動作・ユーザーインタラクションに集中
+- **Server Actionテスト**: ビジネスロジック・データ整合性に集中
+- **実装詳細ではなく動作をテスト**: リファクタリング耐性を重視
+
 ## コミュニケーション・Git運用
 **コミュニケーション**
 - すべての会話、コードコメント、技術議論は日本語で実施
 
 **Git Workflow**
-- **ベースブランチ**: `dev`
+- **ベースブランチ**: `master`
 - **ブランチ命名**: `feature/機能名`、`fix/修正内容`、`docs/ドキュメント更新`
-- **プルリクエスト**: `dev`ブランチ向けに作成
+- **プルリクエスト**: `master`ブランチ向けに作成
+- **カスタムコマンド活用**: `/init <タスク概要>`で自動ブランチ作成・仕様書生成
 
 ## 品質保証
 **自動チェック**

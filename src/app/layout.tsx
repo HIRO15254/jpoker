@@ -12,6 +12,7 @@ import {
 import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
 import React from 'react';
+import AppShell from './_components/AppShell';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -36,13 +37,13 @@ export default function RootLayout({
   return (
     <html lang="ja" {...mantineHtmlProps}>
       <head>
-        <ColorSchemeScript />
+        <ColorSchemeScript defaultColorScheme="auto" />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <MantineProvider>
+        <MantineProvider defaultColorScheme="auto">
           <ModalsProvider>
             <Notifications />
-            {children}
+            <AppShell>{children}</AppShell>
           </ModalsProvider>
         </MantineProvider>
       </body>

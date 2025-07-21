@@ -37,10 +37,10 @@ export default function RootLayout({
   return (
     <html lang="ja" {...mantineHtmlProps}>
       <head>
-        <ColorSchemeScript />
+        <ColorSchemeScript defaultColorScheme="auto" />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <MantineProvider>
+        <MantineProvider defaultColorScheme="auto">
           <ModalsProvider>
             <Notifications />
             <AppShell>{children}</AppShell>
